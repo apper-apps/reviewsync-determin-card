@@ -45,13 +45,13 @@ const loadData = async () => {
       setLoading(true)
       setError(null)
 
-      // Enhanced validation for businessId parameter
+// Enhanced validation for businessId parameter
       if (!businessId || businessId === '' || typeof businessId !== 'string') {
         throw new Error('Invalid business ID provided. Please check the URL and try again.')
       }
 
-      const parsedBusinessId = parseInt(businessId)
-      if (isNaN(parsedBusinessId) || parsedBusinessId <= 0 || !Number.isInteger(parsedBusinessId)) {
+      const parsedBusinessId = parseInt(businessId, 10)
+      if (isNaN(parsedBusinessId) || parsedBusinessId <= 0 || parsedBusinessId.toString() !== businessId.trim()) {
         throw new Error('Business ID must be a valid positive integer. Please check the URL and try again.')
       }
 
