@@ -13,7 +13,7 @@ const BusinessCard = ({ business, onCreateWidget }) => {
     if (onCreateWidget) {
       onCreateWidget(business)
     } else {
-      navigate(`/widget/${business.id}`)
+navigate(`/widget/${business.Id}`)
     }
   }
 
@@ -31,10 +31,10 @@ const BusinessCard = ({ business, onCreateWidget }) => {
           </div>
           
           <div className="flex-1">
-            <h3 className="text-xl font-bold text-gray-900 mb-1">
-              {business.name}
+<h3 className="text-xl font-bold text-gray-900 mb-1">
+              {business.Name}
             </h3>
-            <p className="text-gray-600 text-sm leading-relaxed">
+<p className="text-gray-600 text-sm leading-relaxed">
               {business.address}
             </p>
           </div>
@@ -48,19 +48,19 @@ const BusinessCard = ({ business, onCreateWidget }) => {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center space-x-4">
           <StarRating rating={business.rating} size={20} />
-          <span className="text-sm text-gray-500">
-            {business.totalReviews} reviews
+<span className="text-sm text-gray-500">
+            {business.total_reviews} reviews
           </span>
         </div>
         
-        <div className="text-xs text-gray-400">
-          Place ID: {business.placeId.substring(0, 10)}...
+<div className="text-xs text-gray-400">
+          Place ID: {business.place_id?.substring(0, 10)}...
         </div>
       </div>
 
       <div className="flex items-center justify-between">
-        <div className="text-sm text-gray-500">
-          Last updated: {new Date(business.lastFetched).toLocaleDateString()}
+<div className="text-sm text-gray-500">
+          Last updated: {new Date(business.last_fetched).toLocaleDateString()}
         </div>
         
         <Button

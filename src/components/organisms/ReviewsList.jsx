@@ -36,7 +36,7 @@ const ReviewsList = ({ reviews, business }) => {
       <div className="space-y-4">
         {reviews.map((review, index) => (
           <ReviewCard
-            key={review.id}
+key={review.Id}
             review={review}
             index={index}
           />

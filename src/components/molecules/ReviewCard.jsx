@@ -5,7 +5,7 @@ import StarRating from '@/components/molecules/StarRating'
 import ApperIcon from '@/components/ApperIcon'
 
 const ReviewCard = ({ review, index = 0 }) => {
-  const timeAgo = formatDistanceToNow(new Date(review.publishedAt), { addSuffix: true })
+const timeAgo = formatDistanceToNow(new Date(review.published_at), { addSuffix: true })
 
   return (
     <motion.div
@@ -16,10 +16,10 @@ const ReviewCard = ({ review, index = 0 }) => {
     >
       <div className="flex items-start space-x-4">
         <div className="flex-shrink-0">
-          {review.authorPhotoUrl ? (
+{review.author_photo_url ? (
             <img
-              src={review.authorPhotoUrl}
-              alt={review.authorName}
+src={review.author_photo_url}
+              alt={review.author_name}
               className="w-12 h-12 rounded-full object-cover"
             />
           ) : (
@@ -31,8 +31,8 @@ const ReviewCard = ({ review, index = 0 }) => {
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between mb-2">
-            <h4 className="font-medium text-gray-900 truncate">
-              {review.authorName}
+<h4 className="font-medium text-gray-900 truncate">
+              {review.author_name}
             </h4>
             <time className="text-sm text-gray-500 flex-shrink-0 ml-2">
               {timeAgo}

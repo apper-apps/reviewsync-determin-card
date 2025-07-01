@@ -1,12 +1,15 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { useSelector } from 'react-redux'
 import ApperIcon from '@/components/ApperIcon'
 import Button from '@/components/atoms/Button'
-
+import { AuthContext } from '@/App'
 const Header = () => {
   const location = useLocation()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const { logout } = useContext(AuthContext)
+  const { user, isAuthenticated } = useSelector((state) => state.user)
 
   const navigation = [
     { name: 'Search', href: '/search', icon: 'Search' },
@@ -56,8 +59,20 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* API Status */}
+{/* User Menu and Logout */}
           <div className="hidden lg:flex items-center space-x-4">
+            {isAuthenticated && user && (
+              <div className="flex items-center space-x-3">
+                <div className="text-sm">
+                  <div className="font-medium text-gray-900">{user.firstName} {user.lastName}</div>
+                  <div className="text-gray-500">{user.emailAddress}</div>
+                </div>
+                <Button onClick={logout} variant="outline" size="sm">
+                  <ApperIcon name="LogOut" size={16} className="mr-2" />
+                  Logout
+                </Button>
+              </div>
+            )}
             <div className="flex items-center space-x-2 text-sm">
               <div className="w-2 h-2 bg-success-500 rounded-full animate-pulse" />
               <span className="text-gray-600">API Connected</span>
@@ -103,7 +118,17 @@ const Header = () => {
               </Link>
             ))}
             
-            <div className="pt-4 border-t border-gray-200">
+<div className="pt-4 border-t border-gray-200">
+              {isAuthenticated && user && (
+                <div className="px-4 py-2 mb-3">
+                  <div className="text-sm font-medium text-gray-900 mb-1">{user.firstName} {user.lastName}</div>
+                  <div className="text-xs text-gray-500 mb-3">{user.emailAddress}</div>
+                  <Button onClick={logout} variant="outline" size="sm" className="w-full">
+                    <ApperIcon name="LogOut" size={16} className="mr-2" />
+                    Logout
+                  </Button>
+                </div>
+              )}
               <div className="flex items-center justify-between px-4 py-2">
                 <div className="flex items-center space-x-2 text-sm">
                   <div className="w-2 h-2 bg-success-500 rounded-full animate-pulse" />

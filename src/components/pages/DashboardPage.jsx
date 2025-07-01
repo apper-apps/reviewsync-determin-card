@@ -41,7 +41,7 @@ const DashboardPage = () => {
       setWidgets(widgetsData)
 
       // Calculate stats
-      const totalReviews = businessesData.reduce((sum, business) => sum + business.totalReviews, 0)
+const totalReviews = businessesData.reduce((sum, business) => sum + (business.total_reviews || 0), 0)
       const averageRating = businessesData.length > 0 
         ? businessesData.reduce((sum, business) => sum + business.rating, 0) / businessesData.length
         : 0
@@ -65,7 +65,7 @@ const DashboardPage = () => {
 
     try {
       await widgetService.delete(widgetId)
-      setWidgets(widgets.filter(w => w.id !== widgetId))
+setWidgets(widgets.filter(w => w.Id !== widgetId))
       toast.success('Widget deleted successfully')
     } catch (err) {
       toast.error('Failed to delete widget')
@@ -200,7 +200,7 @@ const DashboardPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {businesses.map((business, index) => (
               <motion.div
-                key={business.id}
+key={business.Id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
@@ -239,10 +239,10 @@ const DashboardPage = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {widgets.map((widget, index) => {
-              const business = businesses.find(b => b.id === widget.businessId)
+const business = businesses.find(b => b.Id === widget.business_id)
               return (
                 <motion.div
-                  key={widget.id}
+key={widget.Id}
                   className="bg-white rounded-xl shadow-card hover:shadow-card-hover transition-all duration-200 p-6"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -254,8 +254,8 @@ const DashboardPage = () => {
                         <ApperIcon name="Code" size={24} className="text-success-600" />
                       </div>
                       <div>
-                        <h3 className="font-semibold text-gray-900">
-                          {business?.name || 'Unknown Business'}
+<h3 className="font-semibold text-gray-900">
+                          {business?.Name || 'Unknown Business'}
                         </h3>
                         <p className="text-sm text-gray-500 capitalize">
                           {widget.theme} Theme
@@ -264,7 +264,7 @@ const DashboardPage = () => {
                     </div>
                     
                     <Button
-                      onClick={() => handleDeleteWidget(widget.id)}
+onClick={() => handleDeleteWidget(widget.Id)}
                       variant="ghost"
                       size="sm"
                       className="text-error-600 hover:text-error-700 hover:bg-error-50"
@@ -275,24 +275,24 @@ const DashboardPage = () => {
 
                   <div className="space-y-3">
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Max Reviews:</span>
-                      <span className="font-medium">{widget.settings?.maxReviews || 3}</span>
+<span className="text-gray-600">Max Reviews:</span>
+                      <span className="font-medium">{JSON.parse(widget.settings || '{}')?.maxReviews || 3}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Min Rating:</span>
-                      <span className="font-medium">{widget.settings?.minRating || 1}+ stars</span>
+<span className="text-gray-600">Min Rating:</span>
+                      <span className="font-medium">{JSON.parse(widget.settings || '{}')?.minRating || 1}+ stars</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">Business Info:</span>
-                      <span className="font-medium">
-                        {widget.settings?.showBusinessInfo ? 'Shown' : 'Hidden'}
+<span className="font-medium">
+                        {JSON.parse(widget.settings || '{}')?.showBusinessInfo ? 'Shown' : 'Hidden'}
                       </span>
                     </div>
                   </div>
 
                   <div className="mt-4 pt-4 border-t border-gray-200">
                     <Button
-                      onClick={() => window.location.href = `/widget/${widget.businessId}`}
+onClick={() => window.location.href = `/widget/${widget.business_id}`}
                       variant="outline"
                       size="sm"
                       className="w-full"

@@ -64,10 +64,10 @@ const WidgetBuilderPage = () => {
   const generateEmbedCode = () => {
     if (!business) return
 
-    const widgetId = `reviewsync-widget-${business.id}`
+const widgetId = `reviewsync-widget-${business.Id}`
     const config = {
-      businessId: business.id,
-      placeId: business.placeId,
+businessId: business.Id,
+      placeId: business.place_id,
       ...settings
     }
 
@@ -93,7 +93,7 @@ const WidgetBuilderPage = () => {
       setSaving(true)
       
       const widgetData = {
-        businessId: parseInt(businessId),
+business_id: parseInt(businessId),
         theme: settings.theme,
         settings: settings,
         embedCode: embedCode
@@ -166,10 +166,10 @@ const WidgetBuilderPage = () => {
               </Button>
             </div>
             <h1 className="text-3xl font-bold text-gray-900">
-              Widget Builder
+Widget Builder
             </h1>
             <p className="text-gray-600 mt-1">
-              Customize your review widget for <span className="font-medium">{business.name}</span>
+Customize your review widget for <span className="font-medium">{business.Name}</span>
             </p>
           </div>
 
@@ -270,7 +270,7 @@ const WidgetBuilderPage = () => {
               
               <div className="text-center p-4 bg-success-50 rounded-lg">
                 <div className="text-2xl font-bold text-success-600">
-                  {business.rating}
+{business.rating}
                 </div>
                 <div className="text-sm text-success-700">Average Rating</div>
               </div>

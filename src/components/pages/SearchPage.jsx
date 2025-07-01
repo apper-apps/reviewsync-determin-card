@@ -41,7 +41,7 @@ const SearchPage = () => {
         setBusiness(foundBusiness)
         
         // Fetch reviews for the business
-        const businessReviews = await reviewService.getByBusinessId(foundBusiness.id)
+const businessReviews = await reviewService.getByBusinessId(foundBusiness.Id)
         setReviews(businessReviews)
         
         toast.success(`Found ${foundBusiness.name} with ${businessReviews.length} reviews`)
@@ -54,8 +54,8 @@ const SearchPage = () => {
     }
   }
 
-  const handleCreateWidget = (business) => {
-    navigate(`/widget/${business.id}`)
+const handleCreateWidget = (business) => {
+    navigate(`/widget/${business.Id}`)
   }
 
   const handleRetry = () => {

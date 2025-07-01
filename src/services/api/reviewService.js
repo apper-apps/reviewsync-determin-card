@@ -1,98 +1,289 @@
-import reviews from '@/services/mockData/reviews.json'
-
-const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms))
-
 const reviewService = {
   async getAll() {
-    await delay(300)
-    return [...reviews]
+    try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { 
+            field: { name: "business_id" },
+            referenceField: { field: { Name: "Name" } }
+          },
+          { field: { Name: "author_name" } },
+          { field: { Name: "rating" } },
+          { field: { Name: "text" } },
+          { field: { Name: "published_at" } },
+          { field: { Name: "author_photo_url" } }
+        ]
+      };
+
+      const response = await apperClient.fetchRecords('review', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+
+      return response.data || [];
+    } catch (error) {
+      console.error("Error fetching reviews:", error);
+      throw error;
+    }
   },
 
   async getById(id) {
-    await delay(200)
-    const review = reviews.find(r => r.Id === id)
-    return review ? { ...review } : null
+    try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { 
+            field: { name: "business_id" },
+            referenceField: { field: { Name: "Name" } }
+          },
+          { field: { Name: "author_name" } },
+          { field: { Name: "rating" } },
+          { field: { Name: "text" } },
+          { field: { Name: "published_at" } },
+          { field: { Name: "author_photo_url" } }
+        ]
+      };
+
+      const response = await apperClient.getRecordById('review', id, params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        return null;
+      }
+
+      return response.data;
+    } catch (error) {
+      console.error(`Error fetching review with ID ${id}:`, error);
+      return null;
+    }
   },
 
   async getByBusinessId(businessId) {
-    await delay(400)
-    const businessReviews = reviews.filter(r => r.businessId === businessId)
-    return businessReviews.map(r => ({ ...r }))
+    try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { 
+            field: { name: "business_id" },
+            referenceField: { field: { Name: "Name" } }
+          },
+          { field: { Name: "author_name" } },
+          { field: { Name: "rating" } },
+          { field: { Name: "text" } },
+          { field: { Name: "published_at" } },
+          { field: { Name: "author_photo_url" } }
+        ],
+        where: [
+          {
+            FieldName: "business_id",
+            Operator: "EqualTo",
+            Values: [businessId],
+            Include: true
+          }
+        ]
+      };
+
+      const response = await apperClient.fetchRecords('review', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+
+      return response.data || [];
+    } catch (error) {
+      console.error("Error fetching reviews by business ID:", error);
+      throw error;
+    }
   },
 
   async refresh(businessId) {
-    await delay(800)
-    
-    // Simulate fetching fresh reviews from Google Places API
-    const existingReviews = reviews.filter(r => r.businessId === businessId)
-    
-    // Add some new mock reviews (simulate new reviews being posted)
-    const authors = ['Alex Smith', 'Jamie Taylor', 'Morgan Lee', 'Casey Jordan', 'Riley Parker']
-    const sampleTexts = [
-      'Great experience! Highly recommend.',
-      'Excellent service and quality.',
-      'Professional and reliable.',
-      'Very satisfied with the results.',
-      'Outstanding customer service!'
-    ]
-    
-    const newReviews = []
-    const numNewReviews = Math.floor(Math.random() * 3)
-    
-    for (let i = 0; i < numNewReviews; i++) {
-      const newId = Math.max(...reviews.map(r => r.Id)) + 1 + i
-      const newReview = {
-        Id: newId,
-        businessId: businessId,
-        authorName: authors[Math.floor(Math.random() * authors.length)],
-        rating: Math.floor(Math.random() * 2) + 4, // 4 or 5 stars
-        text: sampleTexts[Math.floor(Math.random() * sampleTexts.length)],
-        publishedAt: new Date().toISOString(),
-        authorPhotoUrl: null
+    try {
+      // Simulate creating new reviews
+      const authors = ['Alex Smith', 'Jamie Taylor', 'Morgan Lee', 'Casey Jordan', 'Riley Parker'];
+      const sampleTexts = [
+        'Great experience! Highly recommend.',
+        'Excellent service and quality.',
+        'Professional and reliable.',
+        'Very satisfied with the results.',
+        'Outstanding customer service!'
+      ];
+      
+      const numNewReviews = Math.floor(Math.random() * 3);
+      const newReviews = [];
+      
+      for (let i = 0; i < numNewReviews; i++) {
+        const newReview = {
+          business_id: businessId,
+          author_name: authors[Math.floor(Math.random() * authors.length)],
+          rating: Math.floor(Math.random() * 2) + 4, // 4 or 5 stars
+          text: sampleTexts[Math.floor(Math.random() * sampleTexts.length)],
+          published_at: new Date().toISOString(),
+          author_photo_url: null
+        };
+        
+        const created = await this.create(newReview);
+        if (created) newReviews.push(created);
       }
       
-      reviews.push(newReview)
-      newReviews.push(newReview)
+      // Return all reviews for the business including new ones
+      return await this.getByBusinessId(businessId);
+    } catch (error) {
+      console.error("Error refreshing reviews:", error);
+      throw error;
     }
-    
-    // Return all reviews for the business including new ones
-    const allBusinessReviews = reviews.filter(r => r.businessId === businessId)
-    return allBusinessReviews.map(r => ({ ...r }))
   },
 
   async create(reviewData) {
-    await delay(300)
-    const newId = Math.max(...reviews.map(r => r.Id)) + 1
-    const newReview = {
-      Id: newId,
-      ...reviewData,
-      publishedAt: new Date().toISOString()
+    try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      // Only include Updateable fields
+      const params = {
+        records: [{
+          business_id: reviewData.business_id,
+          author_name: reviewData.author_name,
+          rating: reviewData.rating,
+          text: reviewData.text,
+          published_at: reviewData.published_at || new Date().toISOString(),
+          author_photo_url: reviewData.author_photo_url
+        }]
+      };
+
+      const response = await apperClient.createRecord('review', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+
+      if (response.results) {
+        const successfulRecords = response.results.filter(result => result.success);
+        const failedRecords = response.results.filter(result => !result.success);
+        
+        if (failedRecords.length > 0) {
+          console.error(`Failed to create ${failedRecords.length} reviews:${JSON.stringify(failedRecords)}`);
+          failedRecords.forEach(record => {
+            if (record.message) throw new Error(record.message);
+          });
+        }
+        
+        return successfulRecords.length > 0 ? successfulRecords[0].data : null;
+      }
+    } catch (error) {
+      console.error("Error creating review:", error);
+      throw error;
     }
-    reviews.push(newReview)
-    return { ...newReview }
   },
 
   async update(id, updateData) {
-    await delay(250)
-    const index = reviews.findIndex(r => r.Id === id)
-    if (index === -1) {
-      throw new Error('Review not found')
+    try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      // Only include Updateable fields
+      const updateRecord = { Id: id };
+      if (updateData.business_id !== undefined) updateRecord.business_id = updateData.business_id;
+      if (updateData.author_name !== undefined) updateRecord.author_name = updateData.author_name;
+      if (updateData.rating !== undefined) updateRecord.rating = updateData.rating;
+      if (updateData.text !== undefined) updateRecord.text = updateData.text;
+      if (updateData.published_at !== undefined) updateRecord.published_at = updateData.published_at;
+      if (updateData.author_photo_url !== undefined) updateRecord.author_photo_url = updateData.author_photo_url;
+
+      const params = {
+        records: [updateRecord]
+      };
+
+      const response = await apperClient.updateRecord('review', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+
+      if (response.results) {
+        const successfulUpdates = response.results.filter(result => result.success);
+        const failedUpdates = response.results.filter(result => !result.success);
+        
+        if (failedUpdates.length > 0) {
+          console.error(`Failed to update ${failedUpdates.length} reviews:${JSON.stringify(failedUpdates)}`);
+          failedUpdates.forEach(record => {
+            if (record.message) throw new Error(record.message);
+          });
+        }
+        
+        return successfulUpdates.length > 0 ? successfulUpdates[0].data : null;
+      }
+    } catch (error) {
+      console.error("Error updating review:", error);
+      throw error;
     }
-    
-    reviews[index] = { ...reviews[index], ...updateData }
-    return { ...reviews[index] }
   },
 
   async delete(id) {
-    await delay(200)
-    const index = reviews.findIndex(r => r.Id === id)
-    if (index === -1) {
-      throw new Error('Review not found')
+    try {
+      const { ApperClient } = window.ApperSDK;
+      const apperClient = new ApperClient({
+        apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+        apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+      });
+
+      const params = {
+        RecordIds: [id]
+      };
+
+      const response = await apperClient.deleteRecord('review', params);
+      
+      if (!response.success) {
+        console.error(response.message);
+        throw new Error(response.message);
+      }
+
+      if (response.results) {
+        const successfulDeletions = response.results.filter(result => result.success);
+        const failedDeletions = response.results.filter(result => !result.success);
+        
+        if (failedDeletions.length > 0) {
+          console.error(`Failed to delete ${failedDeletions.length} reviews:${JSON.stringify(failedDeletions)}`);
+          failedDeletions.forEach(record => {
+            if (record.message) throw new Error(record.message);
+          });
+        }
+        
+        return successfulDeletions.length > 0;
+      }
+    } catch (error) {
+      console.error("Error deleting review:", error);
+      throw error;
     }
-    
-    const deleted = { ...reviews[index] }
-    reviews.splice(index, 1)
-    return deleted
   }
 }
 
