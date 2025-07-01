@@ -1,3 +1,120 @@
+// Centralized compression/decompression functions for widget settings
+const compressSettings = (settings) => {
+  if (!settings || typeof settings !== 'object') return '{}';
+  
+  const compressed = {};
+  const mapping = {
+    theme: 't',
+    maxReviews: 'mr',
+    minRating: 'mnr',
+    showBusinessInfo: 'sbi',
+    showDates: 'sd',
+    accentColor: 'ac',
+    borderStyle: 'bs',
+    borderWidth: 'bw',
+    paddingTop: 'pt',
+    paddingRight: 'pr',
+    paddingBottom: 'pb',
+    paddingLeft: 'pl',
+    borderRadius: 'br',
+    backgroundColor: 'bg',
+    textColor: 'tc',
+    fontFamily: 'ff',
+    fontSize: 'fs',
+    fontWeight: 'fw',
+    lineHeight: 'lh',
+    alignment: 'al',
+    aspectRatio: 'ar',
+    columnsDesktop: 'cd',
+    columnsMobile: 'cm',
+    animationStyle: 'as'
+  };
+  
+  Object.keys(settings).forEach(key => {
+    const shortKey = mapping[key] || key.substring(0, 3);
+    let value = settings[key];
+    
+    // Convert booleans to numbers for space efficiency
+    if (typeof value === 'boolean') {
+      value = value ? 1 : 0;
+    }
+    
+    compressed[shortKey] = value;
+  });
+  
+  const result = JSON.stringify(compressed).replace(/\s/g, '');
+  
+  // Validate compressed size doesn't exceed database limit
+  if (result.length > 255) {
+    console.warn(`Compressed settings (${result.length} chars) exceeds 255 limit, applying fallback compression`);
+    // Fallback: only include essential settings
+    const essential = {
+      t: compressed.t || 'card',
+      mr: compressed.mr || 3,
+      ac: compressed.ac || '#1a73e8'
+    };
+    const fallbackResult = JSON.stringify(essential);
+    if (fallbackResult.length > 255) {
+      throw new Error('Settings data too large even after compression');
+    }
+    return fallbackResult;
+  }
+  
+  return result;
+};
+
+const decompressSettings = (compressedSettings) => {
+  if (!compressedSettings || compressedSettings === '{}') return {};
+  
+  try {
+    const compressed = JSON.parse(compressedSettings);
+    const reverseMapping = {
+      t: 'theme',
+      mr: 'maxReviews',
+      mnr: 'minRating',
+      sbi: 'showBusinessInfo',
+      sd: 'showDates',
+      ac: 'accentColor',
+      bs: 'borderStyle',
+      bw: 'borderWidth',
+      pt: 'paddingTop',
+      pr: 'paddingRight',
+      pb: 'paddingBottom',
+      pl: 'paddingLeft',
+      br: 'borderRadius',
+      bg: 'backgroundColor',
+      tc: 'textColor',
+      ff: 'fontFamily',
+      fs: 'fontSize',
+      fw: 'fontWeight',
+      lh: 'lineHeight',
+      al: 'alignment',
+      ar: 'aspectRatio',
+      cd: 'columnsDesktop',
+      cm: 'columnsMobile',
+      as: 'animationStyle'
+    };
+    
+    const decompressed = {};
+    Object.keys(compressed).forEach(key => {
+      const fullKey = reverseMapping[key] || key;
+      let value = compressed[key];
+      
+      // Convert numbers back to booleans for boolean settings
+      if (['showBusinessInfo', 'showDates'].includes(fullKey) && (value === 0 || value === 1)) {
+        value = value === 1;
+      }
+      
+      decompressed[fullKey] = value;
+    });
+    
+    return decompressed;
+  } catch (error) {
+    console.error('Error decompressing settings:', error);
+    return {};
+  }
+};
+
 const widgetService = {
   async getAll() {
     try {
@@ -27,14 +144,20 @@ const widgetService = {
         throw new Error(response.message);
       }
 
-      return response.data || [];
+      // Decompress settings for each widget
+      const widgets = (response.data || []).map(widget => ({
+        ...widget,
+        settings: decompressSettings(widget.settings)
+      }));
+
+      return widgets;
     } catch (error) {
       console.error("Error fetching widgets:", error);
       throw error;
     }
   },
 
-  async getById(id) {
+async getById(id) {
     try {
       const { ApperClient } = window.ApperSDK;
       const apperClient = new ApperClient({
@@ -62,6 +185,11 @@ const widgetService = {
         return null;
       }
 
+      // Decompress settings for the widget
+      if (response.data && response.data.settings) {
+        response.data.settings = decompressSettings(response.data.settings);
+      }
+
       return response.data;
     } catch (error) {
       console.error(`Error fetching widget with ID ${id}:`, error);
@@ -69,7 +197,7 @@ const widgetService = {
     }
   },
 
-  async getByBusinessId(businessId) {
+async getByBusinessId(businessId) {
     try {
       const { ApperClient } = window.ApperSDK;
       const apperClient = new ApperClient({
@@ -105,67 +233,26 @@ const widgetService = {
         throw new Error(response.message);
       }
 
-      return response.data || [];
+      // Decompress settings for each widget
+      const widgets = (response.data || []).map(widget => ({
+        ...widget,
+        settings: decompressSettings(widget.settings)
+      }));
+
+      return widgets;
     } catch (error) {
       console.error("Error fetching widgets by business ID:", error);
       throw error;
     }
   },
 
-  async create(widgetData) {
+async create(widgetData) {
     try {
       const { ApperClient } = window.ApperSDK;
       const apperClient = new ApperClient({
         apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
         apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
       });
-
-// Compress settings to fit within 255 character database limit
-      const compressSettings = (settings) => {
-        if (!settings || typeof settings !== 'object') return '{}';
-        
-        const compressed = {};
-        const mapping = {
-          theme: 't',
-          maxReviews: 'mr',
-          minRating: 'mnr',
-          showBusinessInfo: 'sbi',
-          showDates: 'sd',
-          accentColor: 'ac',
-          borderStyle: 'bs',
-          borderWidth: 'bw',
-          paddingTop: 'pt',
-          paddingRight: 'pr',
-          paddingBottom: 'pb',
-          paddingLeft: 'pl',
-          borderRadius: 'br',
-          backgroundColor: 'bg',
-          textColor: 'tc',
-          fontFamily: 'ff',
-          fontSize: 'fs',
-          fontWeight: 'fw',
-          lineHeight: 'lh',
-          alignment: 'al',
-          aspectRatio: 'ar',
-          columnsDesktop: 'cd',
-          columnsMobile: 'cm',
-          animationStyle: 'as'
-        };
-        
-        Object.keys(settings).forEach(key => {
-          const shortKey = mapping[key] || key;
-          let value = settings[key];
-          
-          // Convert booleans to numbers for space efficiency
-          if (typeof value === 'boolean') {
-            value = value ? 1 : 0;
-          }
-          
-          compressed[shortKey] = value;
-        });
-        
-        return JSON.stringify(compressed);
-      };
 
       // Generate embed code
       const widgetId = `reviewsync-widget-${Date.now()}`;
@@ -188,7 +275,7 @@ const widgetService = {
   })();
 </script>`;
 
-      // Create widget record in database
+      // Create widget record in database with compressed settings
       const params = {
         records: [{
           business_id: widgetData.business_id,
@@ -224,7 +311,7 @@ const widgetService = {
     }
   },
 
-  async update(id, updateData) {
+async update(id, updateData) {
     try {
       const { ApperClient } = window.ApperSDK;
       const apperClient = new ApperClient({
@@ -233,53 +320,6 @@ const widgetService = {
       });
 
       // Only include Updateable fields
-// Compress settings helper function for database storage
-      const compressSettings = (settings) => {
-        if (!settings || typeof settings !== 'object') return '{}';
-        
-        const compressed = {};
-        const mapping = {
-          theme: 't',
-          maxReviews: 'mr',
-          minRating: 'mnr',
-          showBusinessInfo: 'sbi',
-          showDates: 'sd',
-          accentColor: 'ac',
-          borderStyle: 'bs',
-          borderWidth: 'bw',
-          paddingTop: 'pt',
-          paddingRight: 'pr',
-          paddingBottom: 'pb',
-          paddingLeft: 'pl',
-          borderRadius: 'br',
-          backgroundColor: 'bg',
-          textColor: 'tc',
-          fontFamily: 'ff',
-          fontSize: 'fs',
-          fontWeight: 'fw',
-          lineHeight: 'lh',
-          alignment: 'al',
-          aspectRatio: 'ar',
-          columnsDesktop: 'cd',
-          columnsMobile: 'cm',
-          animationStyle: 'as'
-        };
-        
-        Object.keys(settings).forEach(key => {
-          const shortKey = mapping[key] || key;
-          let value = settings[key];
-          
-          // Convert booleans to numbers for space efficiency
-          if (typeof value === 'boolean') {
-            value = value ? 1 : 0;
-          }
-          
-          compressed[shortKey] = value;
-        });
-        
-        return JSON.stringify(compressed);
-      };
-
       const updateRecord = { Id: id };
       if (updateData.business_id !== undefined) updateRecord.business_id = updateData.business_id;
       if (updateData.theme !== undefined) updateRecord.theme = updateData.theme;

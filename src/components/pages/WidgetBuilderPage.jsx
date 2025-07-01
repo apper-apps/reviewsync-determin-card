@@ -101,21 +101,22 @@ businessId: business.Id,
     setEmbedCode(code)
   }
 
-  const handleSaveWidget = async () => {
+const handleSaveWidget = async () => {
     try {
       setSaving(true)
       
       const widgetData = {
-business_id: parseInt(businessId),
+        business_id: parseInt(businessId),
         theme: settings.theme,
         settings: settings,
-        embedCode: embedCode
+        embed_code: embedCode
       }
 
       await widgetService.create(widgetData)
       toast.success('Widget saved successfully!')
     } catch (err) {
-      toast.error('Failed to save widget')
+      console.error('Error saving widget:', err)
+      toast.error(err.message || 'Failed to save widget')
     } finally {
       setSaving(false)
     }
