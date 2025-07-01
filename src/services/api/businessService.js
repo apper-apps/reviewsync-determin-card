@@ -1,3 +1,5 @@
+import googlePlacesService from "./googlePlacesService";
+import reviewService from "./reviewService";
 const businessService = {
   async getAll() {
     try {
@@ -65,8 +67,9 @@ const businessService = {
     }
   },
 
-  async searchByName(businessName, address = '') {
+async searchByName(businessName, address = '') {
     try {
+      // First check if business exists in database
       const { ApperClient } = window.ApperSDK;
       const apperClient = new ApperClient({
         apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
@@ -109,12 +112,58 @@ const businessService = {
         throw new Error(response.message);
       }
 
-      // Return first match or create new business
+      // If business exists in database, check if we need to refresh data
+      if (response.data && response.data.length > 0) {
+        const existingBusiness = response.data[0];
+        const lastFetched = new Date(existingBusiness.last_fetched);
+        const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        
+        // If data is less than 24 hours old, return existing data
+        if (lastFetched > oneDayAgo) {
+          return existingBusiness;
+        }
+      }
+
+      // Search Google Places API for fresh data
+      try {
+        const googleResults = await googlePlacesService.textSearch(businessName, address);
+        
+        if (googleResults.length > 0) {
+          const googlePlace = googleResults[0];
+          const businessData = googlePlacesService.formatBusinessData(googlePlace);
+          
+          // Get reviews from Google Places
+          const googleReviews = await googlePlacesService.getReviews(googlePlace.place_id);
+          
+          let savedBusiness;
+          
+          // Update existing business or create new one
+          if (response.data && response.data.length > 0) {
+            savedBusiness = await this.update(response.data[0].Id, businessData);
+          } else {
+            savedBusiness = await this.create(businessData);
+          }
+          
+          // Save Google Places reviews to database
+          if (googleReviews.length > 0 && savedBusiness) {
+            for (const reviewData of googleReviews) {
+              reviewData.business_id = savedBusiness.Id;
+              await reviewService.create(reviewData);
+            }
+          }
+          
+          return savedBusiness;
+        }
+      } catch (googleError) {
+        console.error('Google Places API error, falling back to database:', googleError);
+      }
+
+      // Fallback: return existing data or create placeholder
       if (response.data && response.data.length > 0) {
         return response.data[0];
       }
 
-      // Create new business if none found
+      // Create new business with placeholder data
       const newBusiness = {
         Name: businessName,
         place_id: `ChIJ${Math.random().toString(36).substr(2, 20)}`,
@@ -127,7 +176,7 @@ const businessService = {
       return await this.create(newBusiness);
     } catch (error) {
       console.error("Error searching businesses:", error);
-      throw error;
+throw error;
     }
   },
 
@@ -142,6 +191,9 @@ const businessService = {
         throw new Error('Invalid Google Maps URL');
       }
 
+      const placeId = placeIdMatch[1];
+
+      // Check if business exists in database
       const { ApperClient } = window.ApperSDK;
       const apperClient = new ApperClient({
         apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
@@ -161,7 +213,7 @@ const businessService = {
           {
             FieldName: "place_id",
             Operator: "EqualTo",
-            Values: [placeIdMatch[1]],
+            Values: [placeId],
             Include: true
           }
         ]
@@ -174,7 +226,49 @@ const businessService = {
         throw new Error(response.message);
       }
 
-      // Return existing or create new business
+      // If business exists, check if we need to refresh data
+      if (response.data && response.data.length > 0) {
+        const existingBusiness = response.data[0];
+        const lastFetched = new Date(existingBusiness.last_fetched);
+        const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+        
+        // If data is less than 24 hours old, return existing data
+        if (lastFetched > oneDayAgo) {
+          return existingBusiness;
+        }
+      }
+
+      // Get fresh data from Google Places API
+      try {
+        const googlePlace = await googlePlacesService.getPlaceDetails(placeId);
+        const businessData = googlePlacesService.formatBusinessData(googlePlace);
+        
+        // Get reviews from Google Places
+        const googleReviews = await googlePlacesService.getReviews(placeId);
+        
+        let savedBusiness;
+        
+        // Update existing business or create new one
+        if (response.data && response.data.length > 0) {
+          savedBusiness = await this.update(response.data[0].Id, businessData);
+        } else {
+          savedBusiness = await this.create(businessData);
+        }
+        
+        // Save Google Places reviews to database
+        if (googleReviews.length > 0 && savedBusiness) {
+          for (const reviewData of googleReviews) {
+            reviewData.business_id = savedBusiness.Id;
+            await reviewService.create(reviewData);
+          }
+        }
+        
+        return savedBusiness;
+      } catch (googleError) {
+        console.error('Google Places API error, falling back to database:', googleError);
+      }
+
+      // Fallback: return existing data or create placeholder
       if (response.data && response.data.length > 0) {
         return response.data[0];
       }
@@ -182,7 +276,7 @@ const businessService = {
       // Create new business from URL
       const newBusiness = {
         Name: 'Business from Maps URL',
-        place_id: placeIdMatch[1],
+        place_id: placeId,
         address: '123 Maps Location, Austin, TX 78701',
         rating: 4.0 + Math.random() * 1,
         total_reviews: Math.floor(Math.random() * 100) + 10,

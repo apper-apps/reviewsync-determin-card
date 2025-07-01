@@ -19,7 +19,7 @@ const SearchPage = () => {
   const [reviews, setReviews] = useState([])
   const [error, setError] = useState(null)
 
-  const handleSearch = async (searchData) => {
+const handleSearch = async (searchData) => {
     setLoading(true)
     setError(null)
     setBusiness(null)
@@ -41,14 +41,24 @@ const SearchPage = () => {
         setBusiness(foundBusiness)
         
         // Fetch reviews for the business
-const businessReviews = await reviewService.getByBusinessId(foundBusiness.Id)
+        const businessReviews = await reviewService.getByBusinessId(foundBusiness.Id)
         setReviews(businessReviews)
         
-        toast.success(`Found ${foundBusiness.name} with ${businessReviews.length} reviews`)
+        // Check if data is fresh (less than 24 hours old)
+        const lastFetched = new Date(foundBusiness.last_fetched)
+        const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000)
+        const isDataFresh = lastFetched > oneDayAgo
+        
+        const dataSource = isDataFresh ? 'from Google Places' : 'from database'
+        toast.success(`Found ${foundBusiness.Name} with ${businessReviews.length} reviews ${dataSource}`)
       }
     } catch (err) {
       setError(err.message)
-      toast.error('Failed to search for business')
+      if (err.message.includes('Google Places API')) {
+        toast.error('Google Places API error - using cached data if available')
+      } else {
+        toast.error('Failed to search for business')
+      }
     } finally {
       setLoading(false)
     }
