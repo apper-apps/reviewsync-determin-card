@@ -120,6 +120,53 @@ const widgetService = {
         apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
       });
 
+// Compress settings to fit within 255 character database limit
+      const compressSettings = (settings) => {
+        if (!settings || typeof settings !== 'object') return '{}';
+        
+        const compressed = {};
+        const mapping = {
+          theme: 't',
+          maxReviews: 'mr',
+          minRating: 'mnr',
+          showBusinessInfo: 'sbi',
+          showDates: 'sd',
+          accentColor: 'ac',
+          borderStyle: 'bs',
+          borderWidth: 'bw',
+          paddingTop: 'pt',
+          paddingRight: 'pr',
+          paddingBottom: 'pb',
+          paddingLeft: 'pl',
+          borderRadius: 'br',
+          backgroundColor: 'bg',
+          textColor: 'tc',
+          fontFamily: 'ff',
+          fontSize: 'fs',
+          fontWeight: 'fw',
+          lineHeight: 'lh',
+          alignment: 'al',
+          aspectRatio: 'ar',
+          columnsDesktop: 'cd',
+          columnsMobile: 'cm',
+          animationStyle: 'as'
+        };
+        
+        Object.keys(settings).forEach(key => {
+          const shortKey = mapping[key] || key;
+          let value = settings[key];
+          
+          // Convert booleans to numbers for space efficiency
+          if (typeof value === 'boolean') {
+            value = value ? 1 : 0;
+          }
+          
+          compressed[shortKey] = value;
+        });
+        
+        return JSON.stringify(compressed);
+      };
+
       // Generate embed code
       const widgetId = `reviewsync-widget-${Date.now()}`;
       const config = {
@@ -141,12 +188,12 @@ const widgetService = {
   })();
 </script>`;
 
-      // Only include Updateable fields
+      // Create widget record in database
       const params = {
         records: [{
           business_id: widgetData.business_id,
           theme: widgetData.theme || 'card',
-          settings: JSON.stringify(widgetData.settings || {}),
+          settings: compressSettings(widgetData.settings || {}),
           embed_code: widgetData.embed_code || embedCode
         }]
       };
@@ -186,13 +233,60 @@ const widgetService = {
       });
 
       // Only include Updateable fields
+// Compress settings helper function for database storage
+      const compressSettings = (settings) => {
+        if (!settings || typeof settings !== 'object') return '{}';
+        
+        const compressed = {};
+        const mapping = {
+          theme: 't',
+          maxReviews: 'mr',
+          minRating: 'mnr',
+          showBusinessInfo: 'sbi',
+          showDates: 'sd',
+          accentColor: 'ac',
+          borderStyle: 'bs',
+          borderWidth: 'bw',
+          paddingTop: 'pt',
+          paddingRight: 'pr',
+          paddingBottom: 'pb',
+          paddingLeft: 'pl',
+          borderRadius: 'br',
+          backgroundColor: 'bg',
+          textColor: 'tc',
+          fontFamily: 'ff',
+          fontSize: 'fs',
+          fontWeight: 'fw',
+          lineHeight: 'lh',
+          alignment: 'al',
+          aspectRatio: 'ar',
+          columnsDesktop: 'cd',
+          columnsMobile: 'cm',
+          animationStyle: 'as'
+        };
+        
+        Object.keys(settings).forEach(key => {
+          const shortKey = mapping[key] || key;
+          let value = settings[key];
+          
+          // Convert booleans to numbers for space efficiency
+          if (typeof value === 'boolean') {
+            value = value ? 1 : 0;
+          }
+          
+          compressed[shortKey] = value;
+        });
+        
+        return JSON.stringify(compressed);
+      };
+
       const updateRecord = { Id: id };
       if (updateData.business_id !== undefined) updateRecord.business_id = updateData.business_id;
       if (updateData.theme !== undefined) updateRecord.theme = updateData.theme;
       if (updateData.settings !== undefined) {
         updateRecord.settings = typeof updateData.settings === 'string' 
           ? updateData.settings 
-          : JSON.stringify(updateData.settings);
+          : compressSettings(updateData.settings);
       }
       if (updateData.embed_code !== undefined) updateRecord.embed_code = updateData.embed_code;
 
