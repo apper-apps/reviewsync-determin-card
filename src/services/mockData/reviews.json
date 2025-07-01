@@ -1,0 +1,119 @@
+[
+  {
+    "Id": 1,
+    "businessId": 1,
+    "authorName": "Sarah Johnson",
+    "rating": 5,
+    "text": "Amazing coffee and friendly staff! I come here every morning and they always remember my order. The atmosphere is perfect for working or meeting friends.",
+    "publishedAt": "2024-01-10T08:30:00Z",
+    "authorPhotoUrl": null
+  },
+  {
+    "Id": 2,
+    "businessId": 1,
+    "authorName": "Mike Chen",
+    "rating": 4,
+    "text": "Great coffee shop with excellent WiFi. The baristas are skilled and the pastries are fresh. Only minor complaint is it can get quite busy during peak hours.",
+    "publishedAt": "2024-01-08T14:15:00Z",
+    "authorPhotoUrl": null
+  },
+  {
+    "Id": 3,
+    "businessId": 1,
+    "authorName": "Emily Rodriguez",
+    "rating": 5,
+    "text": "Love this place! The cold brew is the best in town and the staff is always so welcoming. Perfect spot for a quick coffee or to sit and work for hours.",
+    "publishedAt": "2024-01-05T16:45:00Z",
+    "authorPhotoUrl": null
+  },
+  {
+    "Id": 4,
+    "businessId": 1,
+    "authorName": "David Wilson",
+    "rating": 4,
+    "text": "Solid coffee shop with good vibes. The espresso is well-balanced and they have a nice selection of beans. Parking can be tricky during busy times.",
+    "publishedAt": "2024-01-03T11:20:00Z",
+    "authorPhotoUrl": null
+  },
+  {
+    "Id": 5,
+    "businessId": 2,
+    "authorName": "Lisa Thompson",
+    "rating": 5,
+    "text": "Authentic Italian food that reminds me of my trip to Rome! The pasta is made fresh daily and the tiramisu is to die for. Service is excellent too.",
+    "publishedAt": "2024-01-09T19:30:00Z",
+    "authorPhotoUrl": null
+  },
+  {
+    "Id": 6,
+    "businessId": 2,
+    "authorName": "Roberto Martinez",
+    "rating": 5,
+    "text": "Best Italian restaurant in Austin! The owner is from Italy and you can taste the authenticity in every dish. The wine selection is also fantastic.",
+    "publishedAt": "2024-01-07T20:15:00Z",
+    "authorPhotoUrl": null
+  },
+  {
+    "Id": 7,
+    "businessId": 2,
+    "authorName": "Jennifer Kim",
+    "rating": 4,
+    "text": "Wonderful family-owned restaurant with amazing food. The portions are generous and the flavors are incredible. Definitely worth the wait for a table.",
+    "publishedAt": "2024-01-04T18:45:00Z",
+    "authorPhotoUrl": null
+  },
+  {
+    "Id": 8,
+    "businessId": 3,
+    "authorName": "Tom Anderson",
+    "rating": 4,
+    "text": "Fixed my phone screen quickly and professionally. Fair prices and good customer service. They explained the repair process and gave me an honest timeline.",
+    "publishedAt": "2024-01-06T13:30:00Z",
+    "authorPhotoUrl": null
+  },
+  {
+    "Id": 9,
+    "businessId": 3,
+    "authorName": "Rachel Green",
+    "rating": 5,
+    "text": "Saved my laptop when I thought it was completely dead! The technician was knowledgeable and the repair cost was very reasonable. Highly recommended!",
+    "publishedAt": "2024-01-02T10:15:00Z",
+    "authorPhotoUrl": null
+  },
+  {
+    "Id": 10,
+    "businessId": 4,
+    "authorName": "Mark Davis",
+    "rating": 5,
+    "text": "Best nursery in town! The staff is incredibly knowledgeable about plants and they have a great selection. My garden has never looked better thanks to their advice.",
+    "publishedAt": "2024-01-08T09:45:00Z",
+    "authorPhotoUrl": null
+  },
+  {
+    "Id": 11,
+    "businessId": 4,
+    "authorName": "Amy Foster",
+    "rating": 4,
+    "text": "Beautiful plants and helpful staff. They helped me choose the right plants for my shady backyard and everything is thriving. Prices are reasonable too.",
+    "publishedAt": "2024-01-01T15:20:00Z",
+    "authorPhotoUrl": null
+  },
+  {
+    "Id": 12,
+    "businessId": 5,
+    "authorName": "Chris Miller",
+    "rating": 5,
+    "text": "Dr. Smith and his team are fantastic! Professional, gentle, and they really care about their patients. The office is modern and appointments are always on time.",
+    "publishedAt": "2024-01-09T14:30:00Z",
+    "authorPhotoUrl": null
+  },
+  {
+    "Id": 13,
+    "businessId": 5,
+    "authorName": "Patricia Brown",
+    "rating": 5,
+    "text": "Finally found a dentist I actually like visiting! The hygienist is thorough but gentle, and they use the latest technology. Highly recommend to anyone looking for quality dental care.",
+    "publishedAt": "2024-01-05T10:45:00Z",
+    "authorPhotoUrl": null
+  }
+]

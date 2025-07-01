@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import 'react-toastify/dist/ReactToastify.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Toast customization */
+.Toastify__toast-container {
+  @apply top-4 right-4;
+  font-family: 'Inter', sans-serif;
+  width: 360px;
+}
+
+.Toastify__toast {
+  @apply bg-white border border-gray-200 shadow-card text-gray-800 rounded-lg;
+  padding: 16px 20px;
+  min-height: auto;
+}
+
+.Toastify__toast--success {
+  @apply border-success-200 bg-success-50;
+}
+
+.Toastify__toast--error {
+  @apply border-error-200 bg-error-50;
+}
+
+.Toastify__toast--warning {
+  @apply border-warning-200 bg-warning-50;
+}
+
+.Toastify__toast--info {
+  @apply border-info-200 bg-info-50;
+}
+
+.Toastify__progress-bar {
+  @apply bg-primary-500;
+}
+
+.Toastify__close-button {
+  @apply text-gray-500 hover:text-gray-700;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400;
+}
+
+/* Syntax highlighting for code blocks */
+.code-block {
+  @apply bg-gray-900 text-gray-100 p-4 rounded-lg font-mono text-sm overflow-x-auto;
+}
+
+.code-block .tag {
+  @apply text-blue-300;
+}
+
+.code-block .attr-name {
+  @apply text-yellow-300;
+}
+
+.code-block .attr-value {
+  @apply text-green-300;
+}
+
+.code-block .comment {
+  @apply text-gray-400;
+}
+
+/* Star rating animations */
+.star-rating {
+  @apply flex items-center gap-1;
+}
+
+.star-icon {
+  @apply transition-all duration-200;
+}
+
+.star-icon.filled {
+  @apply text-warning-500;
+}
+
+.star-icon.empty {
+  @apply text-gray-300;
+}
+
+.star-icon:hover {
+  @apply scale-110;
+}
+
+/* Widget preview styles */
+.widget-preview {
+  @apply border-2 border-dashed border-gray-200 bg-gray-50 p-6 rounded-lg;
+}
+
+.widget-preview.active {
+  @apply border-primary-300 bg-primary-50;
+}
+
+/* Form enhancements */
+.form-group {
+  @apply space-y-2;
+}
+
+.form-label {
+  @apply block text-sm font-medium text-gray-700 mb-2;
+}
+
+.form-input {
+  @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200;
+}
+
+.form-textarea {
+  @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200 resize-none;
+}
+
+.form-select {
+  @apply w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-200 bg-white;
+}
+
+/* Button enhancements */
+.btn-copy {
+  @apply relative overflow-hidden;
+}
+
+.btn-copy.copied::after {
+  content: '✓ Copied!';
+  @apply absolute inset-0 bg-success-500 text-white flex items-center justify-center font-medium animate-fadeIn;
+}

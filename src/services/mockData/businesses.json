@@ -1,0 +1,47 @@
+[
+  {
+    "Id": 1,
+    "placeId": "ChIJN1t_tDeuEmsRUsoyG83frY4",
+    "name": "Joe's Coffee House",
+    "address": "123 Main Street, Austin, TX 78701",
+    "rating": 4.5,
+    "totalReviews": 127,
+    "lastFetched": "2024-01-15T10:30:00Z"
+  },
+  {
+    "Id": 2,
+    "placeId": "ChIJKQ-rqFeuEmsRCTvXGBwdNJ8",
+    "name": "Bella's Italian Restaurant",
+    "address": "456 Oak Avenue, Austin, TX 78702",
+    "rating": 4.8,
+    "totalReviews": 89,
+    "lastFetched": "2024-01-14T15:45:00Z"
+  },
+  {
+    "Id": 3,
+    "placeId": "ChIJrQY7zheuEmsRHS3i-M2mKKE",
+    "name": "TechFix Repair Shop",
+    "address": "789 Tech Blvd, Austin, TX 78703",
+    "rating": 4.2,
+    "totalReviews": 56,
+    "lastFetched": "2024-01-13T09:15:00Z"
+  },
+  {
+    "Id": 4,
+    "placeId": "ChIJBf_sDieuEmsRT_XlHGxdKJ4",
+    "name": "Green Garden Nursery",
+    "address": "321 Garden Way, Austin, TX 78704",
+    "rating": 4.6,
+    "totalReviews": 73,
+    "lastFetched": "2024-01-12T14:20:00Z"
+  },
+  {
+    "Id": 5,
+    "placeId": "ChIJMxQ9rieuEmsRGQ3XFdKw-lE",
+    "name": "Downtown Dental Care",
+    "address": "654 Health Street, Austin, TX 78705",
+    "rating": 4.7,
+    "totalReviews": 134,
+    "lastFetched": "2024-01-11T11:30:00Z"
+  }
+]

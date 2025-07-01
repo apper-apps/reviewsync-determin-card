@@ -1,0 +1,41 @@
+[
+  {
+    "Id": 1,
+    "businessId": 1,
+    "theme": "card",
+    "settings": {
+      "maxReviews": 3,
+      "minRating": 4,
+      "showBusinessInfo": true,
+      "showDates": true,
+      "accentColor": "#1a73e8"
+    },
+    "embedCode": "<!-- ReviewSync Widget -->\n<div id=\"reviewsync-widget-1\"></div>\n<script>\n  (function() {\n    var config = {\n      \"businessId\": 1,\n      \"placeId\": \"ChIJN1t_tDeuEmsRUsoyG83frY4\",\n      \"theme\": \"card\",\n      \"maxReviews\": 3,\n      \"minRating\": 4,\n      \"showBusinessInfo\": true,\n      \"showDates\": true,\n      \"accentColor\": \"#1a73e8\"\n    };\n    var script = document.createElement('script');\n    script.src = 'https://cdn.reviewsync.com/widget.js';\n    script.onload = function() {\n      ReviewSyncWidget.init('reviewsync-widget-1', config);\n    };\n    document.head.appendChild(script);\n  })();\n</script>"
+  },
+  {
+    "Id": 2,
+    "businessId": 2,
+    "theme": "list",
+    "settings": {
+      "maxReviews": 5,
+      "minRating": 3,
+      "showBusinessInfo": true,
+      "showDates": false,
+      "accentColor": "#34a853"
+    },
+    "embedCode": "<!-- ReviewSync Widget -->\n<div id=\"reviewsync-widget-2\"></div>\n<script>\n  (function() {\n    var config = {\n      \"businessId\": 2,\n      \"placeId\": \"ChIJKQ-rqFeuEmsRCTvXGBwdNJ8\",\n      \"theme\": \"list\",\n      \"maxReviews\": 5,\n      \"minRating\": 3,\n      \"showBusinessInfo\": true,\n      \"showDates\": false,\n      \"accentColor\": \"#34a853\"\n    };\n    var script = document.createElement('script');\n    script.src = 'https://cdn.reviewsync.com/widget.js';\n    script.onload = function() {\n      ReviewSyncWidget.init('reviewsync-widget-2', config);\n    };\n    document.head.appendChild(script);\n  })();\n</script>"
+  },
+  {
+    "Id": 3,
+    "businessId": 5,
+    "theme": "minimal",
+    "settings": {
+      "maxReviews": 3,
+      "minRating": 5,
+      "showBusinessInfo": false,
+      "showDates": false,
+      "accentColor": "#fbbc04"
+    },
+    "embedCode": "<!-- ReviewSync Widget -->\n<div id=\"reviewsync-widget-3\"></div>\n<script>\n  (function() {\n    var config = {\n      \"businessId\": 5,\n      \"placeId\": \"ChIJMxQ9rieuEmsRGQ3XFdKw-lE\",\n      \"theme\": \"minimal\",\n      \"maxReviews\": 3,\n      \"minRating\": 5,\n      \"showBusinessInfo\": false,\n      \"showDates\": false,\n      \"accentColor\": \"#fbbc04\"\n    };\n    var script = document.createElement('script');\n    script.src = 'https://cdn.reviewsync.com/widget.js';\n    script.onload = function() {\n      ReviewSyncWidget.init('reviewsync-widget-3', config);\n    };\n    document.head.appendChild(script);\n  })();\n</script>"
+  }
+]
