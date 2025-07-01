@@ -273,19 +273,46 @@ onClick={() => handleDeleteWidget(widget.Id)}
                     </Button>
                   </div>
 
-                  <div className="space-y-3">
+<div className="space-y-3">
                     <div className="flex justify-between text-sm">
-<span className="text-gray-600">Max Reviews:</span>
-                      <span className="font-medium">{JSON.parse(widget.settings || '{}')?.maxReviews || 3}</span>
+                      <span className="text-gray-600">Max Reviews:</span>
+                      <span className="font-medium">{(() => {
+                        try {
+                          const settings = typeof widget.settings === 'string' 
+                            ? JSON.parse(widget.settings || '{}') 
+                            : widget.settings || {};
+                          return settings.maxReviews || 3;
+                        } catch (error) {
+                          return 3;
+                        }
+                      })()}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-<span className="text-gray-600">Min Rating:</span>
-                      <span className="font-medium">{JSON.parse(widget.settings || '{}')?.minRating || 1}+ stars</span>
+                      <span className="text-gray-600">Min Rating:</span>
+                      <span className="font-medium">{(() => {
+                        try {
+                          const settings = typeof widget.settings === 'string' 
+                            ? JSON.parse(widget.settings || '{}') 
+                            : widget.settings || {};
+                          return (settings.minRating || 1) + '+ stars';
+                        } catch (error) {
+                          return '1+ stars';
+                        }
+                      })()}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">Business Info:</span>
-<span className="font-medium">
-                        {JSON.parse(widget.settings || '{}')?.showBusinessInfo ? 'Shown' : 'Hidden'}
+                      <span className="font-medium">
+                        {(() => {
+                          try {
+                            const settings = typeof widget.settings === 'string' 
+                              ? JSON.parse(widget.settings || '{}') 
+                              : widget.settings || {};
+                            return settings.showBusinessInfo ? 'Shown' : 'Hidden';
+                          } catch (error) {
+                            return 'Hidden';
+                          }
+                        })()}
                       </span>
                     </div>
                   </div>
