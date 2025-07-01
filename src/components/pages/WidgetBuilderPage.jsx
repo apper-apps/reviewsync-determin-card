@@ -7,7 +7,7 @@ import WidgetCustomizer from '@/components/organisms/WidgetCustomizer'
 import CodeBlock from '@/components/molecules/CodeBlock'
 import Button from '@/components/atoms/Button'
 import Loading from '@/components/ui/Loading'
-import Error from '@/components/ui/Error'
+import ErrorComponent from '@/components/ui/Error'
 import ApperIcon from '@/components/ApperIcon'
 import businessService from '@/services/api/businessService'
 import reviewService from '@/services/api/reviewService'
@@ -134,8 +134,8 @@ business_id: parseInt(businessId),
   }
 
   if (error) {
-    return (
-      <Error
+return (
+      <ErrorComponent
         message={error}
         onRetry={loadData}
         type="general"
@@ -144,8 +144,8 @@ business_id: parseInt(businessId),
   }
 
   if (!business) {
-    return (
-      <Error
+return (
+      <ErrorComponent
         message="Business not found"
         onRetry={() => navigate('/search')}
         type="general"
