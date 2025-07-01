@@ -45,19 +45,24 @@ const loadData = async () => {
       setLoading(true)
       setError(null)
 
-      // Validate businessId parameter
-      if (!businessId || isNaN(parseInt(businessId))) {
+      // Enhanced validation for businessId parameter
+      if (!businessId || businessId === '' || typeof businessId !== 'string') {
         throw new Error('Invalid business ID provided. Please check the URL and try again.')
       }
 
+      const parsedBusinessId = parseInt(businessId)
+      if (isNaN(parsedBusinessId) || parsedBusinessId <= 0 || !Number.isInteger(parsedBusinessId)) {
+        throw new Error('Business ID must be a valid positive integer. Please check the URL and try again.')
+      }
+
       // Fetch business data
-      const businessData = await businessService.getById(parseInt(businessId))
+      const businessData = await businessService.getById(parsedBusinessId)
       if (!businessData) {
         throw new Error(`Business with ID ${businessId} not found. The business may have been deleted or the ID is incorrect.`)
       }
 
       // Fetch reviews data
-      const reviewsData = await reviewService.getByBusinessId(parseInt(businessId))
+      const reviewsData = await reviewService.getByBusinessId(parsedBusinessId)
       
       setBusiness(businessData)
       setReviews(reviewsData || [])
