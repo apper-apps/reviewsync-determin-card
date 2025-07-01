@@ -182,30 +182,82 @@ throw error;
 
 async searchByUrl(googleMapsUrl) {
     try {
-      // Extract place ID from Google Maps URL - support multiple formats
+      // Normalize the URL to handle edge cases
+      const normalizedUrl = decodeURIComponent(googleMapsUrl.trim());
+      
+      // Comprehensive Google Maps URL validation and place ID extraction
       const placeIdMatch = 
         // Standard place URLs: /place/[place_id] or /maps/place/[place_id]
-        googleMapsUrl.match(/\/place\/([^\/\?&@]+)/) || 
-        googleMapsUrl.match(/\/maps\/place\/([^\/\?&@]+)/) ||
-        // Query parameter: ?q=place_id:[place_id]
-        googleMapsUrl.match(/[?&]q=place_id:([^&]+)/) ||
-        // CID parameter: ?cid=[place_id]
-        googleMapsUrl.match(/[?&]cid=([^&]+)/) ||
-        // Data parameter with place ID
-        googleMapsUrl.match(/data=.*!3m1!4b1!4m\d+!3m\d+!1s([^!]+)/) ||
-        // Alternative data parameter formats
-        googleMapsUrl.match(/data=.*!1s([^!]+)/) ||
+        normalizedUrl.match(/\/place\/([^\/\?&@]+)/) || 
+        normalizedUrl.match(/\/maps\/place\/([^\/\?&@]+)/) ||
+        
+        // Query parameter formats
+        normalizedUrl.match(/[?&]q=place_id:([^&]+)/) ||
+        normalizedUrl.match(/[?&]cid=([^&]+)/) ||
+        normalizedUrl.match(/[?&]place_id[=:]([^&\s]+)/) ||
+        
+        // Data parameter with place ID (various formats)
+        normalizedUrl.match(/data=.*!3m1!4b1!4m\d+!3m\d+!1s([^!]+)/) ||
+        normalizedUrl.match(/data=.*!1s([^!]+)/) ||
+        normalizedUrl.match(/data=.*!4m\d+!3m\d+!1s([^!]+)/) ||
+        
         // Place name with coordinates (extract from @ symbol)
-        googleMapsUrl.match(/\/place\/[^@]+@[^,]+,[^,]+,\d+z\/data=.*!1s([^!]+)/) ||
-        // Fallback for encoded place IDs
-        googleMapsUrl.match(/place_id[=:]([^&\s]+)/);
+        normalizedUrl.match(/\/place\/[^@]+@[^,]+,[^,]+,\d+z\/data=.*!1s([^!]+)/) ||
+        
+        // Shortened URLs (goo.gl/maps)
+        normalizedUrl.match(/goo\.gl\/maps\/([^\/\?&@]+)/) ||
+        
+        // Mobile Google Maps URLs (maps.app.goo.gl)
+        normalizedUrl.match(/maps\.app\.goo\.gl\/([^\/\?&@]+)/) ||
+        
+        // International Google domains
+        normalizedUrl.match(/maps\.google\.[a-z.]+\/maps\/place\/([^\/\?&@]+)/) ||
+        
+        // Direct coordinate links with place data
+        normalizedUrl.match(/@[^,]+,[^,]+,\d+z\/data=.*!1s([^!]+)/) ||
+        
+        // Search query formats
+        normalizedUrl.match(/[?&]q=([^&]+)/) && normalizedUrl.includes('place_id');
       
       if (!placeIdMatch) {
-        throw new Error('Invalid Google Maps URL. Supported formats: maps.google.com/maps/place/[place_id], maps.google.com/maps?q=place_id:[place_id], or maps.google.com/maps?cid=[place_id]');
+        // Provide specific error message based on URL format
+        let errorMessage = "We couldn't recognize this Google Maps URL format. ";
+        
+        if (!normalizedUrl.includes('google') && !normalizedUrl.includes('goo.gl')) {
+          errorMessage += "Please make sure you're using a valid Google Maps URL.";
+        } else if (normalizedUrl.includes('google') && !normalizedUrl.includes('maps')) {
+          errorMessage += "This appears to be a Google URL, but not a Google Maps link. Please use a URL from Google Maps.";
+        } else if (normalizedUrl.includes('directions')) {
+          errorMessage += "This looks like a directions URL. Please use a link to a specific business or place instead.";
+        } else {
+          errorMessage += "Supported formats include:\n" +
+                         "• Standard place links: maps.google.com/maps/place/[business-name]\n" +
+                         "• Shortened links: goo.gl/maps/[code]\n" +
+                         "• Mobile app links: maps.app.goo.gl/[code]\n" +
+                         "• Place ID links: maps.google.com/maps?q=place_id:[id]\n" +
+                         "• CID links: maps.google.com/maps?cid=[id]";
+        }
+        
+        throw new Error(errorMessage);
       }
 
-      // Decode the place ID in case it's URL encoded
-      const placeId = decodeURIComponent(placeIdMatch[1]);
+      // Extract and decode the place ID
+      let placeId = placeIdMatch[1];
+      
+      // Handle special cases for place ID extraction
+      if (normalizedUrl.includes('q=') && !normalizedUrl.includes('place_id:')) {
+        // For search queries, we might need to make an additional API call
+        // For now, use the search term as a fallback identifier
+        placeId = decodeURIComponent(placeId.replace(/\+/g, ' '));
+      } else {
+        // Standard URL decoding for place IDs
+        placeId = decodeURIComponent(placeId);
+      }
+
+      // Validate place ID format (basic sanity check)
+      if (!placeId || placeId.length < 3) {
+        throw new Error("The place ID extracted from this URL appears to be invalid. Please try copying the URL again from Google Maps.");
+      }
 
       // Check if business exists in database
       const { ApperClient } = window.ApperSDK;
