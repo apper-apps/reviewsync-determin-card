@@ -15,7 +15,14 @@ const PREDEFINED_THEMES = {
     borderRadius: 8,
     shadow: 'medium',
     layout: 'card',
-    spacing: 'normal'
+    spacing: 'normal',
+    fontFamily: 'Inter',
+    fontSize: 'medium',
+    fontWeight: 'normal',
+    columns: 1,
+    aspectRatio: 'auto',
+    alignment: 'left',
+    animation: 'subtle'
   },
   modern: {
     name: 'Modern',
@@ -27,7 +34,14 @@ const PREDEFINED_THEMES = {
     borderRadius: 12,
     shadow: 'large',
     layout: 'card',
-    spacing: 'compact'
+    spacing: 'compact',
+    fontFamily: 'Roboto',
+    fontSize: 'medium',
+    fontWeight: 'medium',
+    columns: 1,
+    aspectRatio: 'square',
+    alignment: 'center',
+    animation: 'smooth'
   },
   minimal: {
     name: 'Minimal',
@@ -39,7 +53,14 @@ const PREDEFINED_THEMES = {
     borderRadius: 4,
     shadow: 'none',
     layout: 'list',
-    spacing: 'minimal'
+    spacing: 'minimal',
+    fontFamily: 'Open Sans',
+    fontSize: 'small',
+    fontWeight: 'light',
+    columns: 1,
+    aspectRatio: 'auto',
+    alignment: 'left',
+    animation: 'none'
   },
   dark: {
     name: 'Dark',
@@ -51,7 +72,14 @@ const PREDEFINED_THEMES = {
     borderRadius: 8,
     shadow: 'medium',
     layout: 'card',
-    spacing: 'normal'
+    spacing: 'normal',
+    fontFamily: 'Inter',
+    fontSize: 'medium',
+    fontWeight: 'normal',
+    columns: 1,
+    aspectRatio: 'auto',
+    alignment: 'left',
+    animation: 'subtle'
   },
   vibrant: {
     name: 'Vibrant',
@@ -63,7 +91,14 @@ const PREDEFINED_THEMES = {
     borderRadius: 16,
     shadow: 'large',
     layout: 'card',
-    spacing: 'wide'
+    spacing: 'wide',
+    fontFamily: 'Lato',
+    fontSize: 'large',
+    fontWeight: 'bold',
+    columns: 2,
+    aspectRatio: 'wide',
+    alignment: 'center',
+    animation: 'dynamic'
   },
   corporate: {
     name: 'Corporate',
@@ -75,7 +110,14 @@ const PREDEFINED_THEMES = {
     borderRadius: 6,
     shadow: 'small',
     layout: 'list',
-    spacing: 'normal'
+    spacing: 'normal',
+    fontFamily: 'Roboto',
+    fontSize: 'medium',
+    fontWeight: 'medium',
+    columns: 1,
+    aspectRatio: 'auto',
+    alignment: 'left',
+    animation: 'subtle'
   }
 };
 
@@ -174,7 +216,7 @@ function WidgetThemeSelector({ selectedTheme, onThemeChange, onPreview }) {
         </div>
       ) : (
         /* Custom Theme Editor */
-        <div className="bg-card border rounded-lg p-6 space-y-6">
+<div className="bg-card border rounded-lg p-6 space-y-6">
           {/* Color Customization */}
           <div>
             <h4 className="text-md font-medium text-foreground mb-4">Colors</h4>
@@ -217,9 +259,69 @@ function WidgetThemeSelector({ selectedTheme, onThemeChange, onPreview }) {
             </div>
           </div>
 
+          {/* Typography */}
+          <div>
+            <h4 className="text-md font-medium text-foreground mb-4">Typography</h4>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {/* Font Family */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  Font Family
+                </label>
+                <select
+                  value={customTheme.fontFamily}
+                  onChange={(e) => handleCustomThemeChange('fontFamily', e.target.value)}
+                  className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-background"
+                >
+                  <option value="Inter">Inter</option>
+                  <option value="Roboto">Roboto</option>
+                  <option value="Open Sans">Open Sans</option>
+                  <option value="Lato">Lato</option>
+                  <option value="Poppins">Poppins</option>
+                  <option value="Nunito">Nunito</option>
+                </select>
+              </div>
+
+              {/* Font Size */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  Font Size
+                </label>
+                <select
+                  value={customTheme.fontSize}
+                  onChange={(e) => handleCustomThemeChange('fontSize', e.target.value)}
+                  className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-background"
+                >
+                  <option value="small">Small</option>
+                  <option value="medium">Medium</option>
+                  <option value="large">Large</option>
+                  <option value="xlarge">Extra Large</option>
+                </select>
+              </div>
+
+              {/* Font Weight */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  Font Weight
+                </label>
+                <select
+                  value={customTheme.fontWeight}
+                  onChange={(e) => handleCustomThemeChange('fontWeight', e.target.value)}
+                  className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-background"
+                >
+                  <option value="light">Light</option>
+                  <option value="normal">Normal</option>
+                  <option value="medium">Medium</option>
+                  <option value="semibold">Semi Bold</option>
+                  <option value="bold">Bold</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
           {/* Layout Options */}
           <div>
-            <h4 className="text-md font-medium text-foreground mb-4">Layout</h4>
+            <h4 className="text-md font-medium text-foreground mb-4">Layout & Appearance</h4>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {/* Border Radius */}
               <div>
@@ -268,6 +370,8 @@ function WidgetThemeSelector({ selectedTheme, onThemeChange, onPreview }) {
                 >
                   <option value="card">Card</option>
                   <option value="list">List</option>
+                  <option value="grid">Grid</option>
+                  <option value="carousel">Carousel</option>
                 </select>
               </div>
 
@@ -285,6 +389,74 @@ function WidgetThemeSelector({ selectedTheme, onThemeChange, onPreview }) {
                   <option value="compact">Compact</option>
                   <option value="normal">Normal</option>
                   <option value="wide">Wide</option>
+                </select>
+              </div>
+
+              {/* Columns */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  Columns
+                </label>
+                <select
+                  value={customTheme.columns}
+                  onChange={(e) => handleCustomThemeChange('columns', parseInt(e.target.value))}
+                  className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-background"
+                >
+                  <option value={1}>Single</option>
+                  <option value={2}>Two</option>
+                  <option value={3}>Three</option>
+                  <option value={4}>Four</option>
+                </select>
+              </div>
+
+              {/* Aspect Ratio */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  Aspect Ratio
+                </label>
+                <select
+                  value={customTheme.aspectRatio}
+                  onChange={(e) => handleCustomThemeChange('aspectRatio', e.target.value)}
+                  className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-background"
+                >
+                  <option value="auto">Auto</option>
+                  <option value="square">Square</option>
+                  <option value="wide">Wide (16:9)</option>
+                  <option value="tall">Tall (3:4)</option>
+                </select>
+              </div>
+
+              {/* Alignment */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  Alignment
+                </label>
+                <select
+                  value={customTheme.alignment}
+                  onChange={(e) => handleCustomThemeChange('alignment', e.target.value)}
+                  className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-background"
+                >
+                  <option value="left">Left</option>
+                  <option value="center">Center</option>
+                  <option value="right">Right</option>
+                  <option value="justify">Justify</option>
+                </select>
+              </div>
+
+              {/* Animation */}
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  Animation
+                </label>
+                <select
+                  value={customTheme.animation}
+                  onChange={(e) => handleCustomThemeChange('animation', e.target.value)}
+                  className="w-full px-3 py-2 border border-border rounded-md focus:outline-none focus:ring-2 focus:ring-primary bg-background"
+                >
+                  <option value="none">None</option>
+                  <option value="subtle">Subtle</option>
+                  <option value="smooth">Smooth</option>
+                  <option value="dynamic">Dynamic</option>
                 </select>
               </div>
             </div>

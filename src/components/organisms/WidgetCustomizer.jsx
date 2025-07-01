@@ -13,6 +13,23 @@ const WidgetCustomizer = ({ onSettingsChange, settings = {} }) => {
     showBusinessInfo: true,
     showDates: true,
     accentColor: '#1a73e8',
+    borderStyle: 'solid',
+    borderWidth: 1,
+    paddingTop: 16,
+    paddingRight: 16,
+    paddingBottom: 16,
+    paddingLeft: 16,
+    marginTop: 0,
+    marginRight: 0,
+    marginBottom: 0,
+    marginLeft: 0,
+    fontFamily: 'Inter',
+    fontSize: 14,
+    fontWeight: 400,
+    lineHeight: 1.5,
+    backgroundGradient: false,
+    gradientFrom: '#ffffff',
+    gradientTo: '#f8fafc',
     ...settings
   })
 
@@ -25,7 +42,9 @@ const WidgetCustomizer = ({ onSettingsChange, settings = {} }) => {
   const themes = [
     { value: 'card', label: 'Card Layout' },
     { value: 'list', label: 'List Layout' },
-    { value: 'minimal', label: 'Minimal Layout' }
+    { value: 'minimal', label: 'Minimal Layout' },
+    { value: 'grid', label: 'Grid Layout' },
+    { value: 'carousel', label: 'Carousel Layout' }
   ]
 
   const colorPresets = [
@@ -35,6 +54,15 @@ const WidgetCustomizer = ({ onSettingsChange, settings = {} }) => {
     { name: 'Error Red', value: '#ea4335' },
     { name: 'Purple', value: '#9c27b0' },
     { name: 'Teal', value: '#009688' }
+  ]
+
+  const fontFamilies = [
+    { value: 'Inter', label: 'Inter' },
+    { value: 'Roboto', label: 'Roboto' },
+    { value: 'Open Sans', label: 'Open Sans' },
+    { value: 'Lato', label: 'Lato' },
+    { value: 'Poppins', label: 'Poppins' },
+    { value: 'Nunito', label: 'Nunito' }
   ]
 
   return (
@@ -94,6 +122,179 @@ const WidgetCustomizer = ({ onSettingsChange, settings = {} }) => {
               <option value={5}>5 Stars Only</option>
             </Select>
           </div>
+        </div>
+
+        {/* Typography */}
+        <div>
+          <h4 className="text-md font-medium text-gray-700 mb-3">Typography</h4>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Select
+                label="Font Family"
+                value={localSettings.fontFamily}
+                onChange={(e) => handleChange('fontFamily', e.target.value)}
+              >
+                {fontFamilies.map(font => (
+                  <option key={font.value} value={font.value}>
+                    {font.label}
+                  </option>
+                ))}
+              </Select>
+            </div>
+            <div>
+              <Input
+                type="number"
+                label="Font Size (px)"
+                value={localSettings.fontSize}
+                onChange={(e) => handleChange('fontSize', parseInt(e.target.value))}
+                min={10}
+                max={24}
+              />
+            </div>
+            <div>
+              <Select
+                label="Font Weight"
+                value={localSettings.fontWeight}
+                onChange={(e) => handleChange('fontWeight', parseInt(e.target.value))}
+              >
+                <option value={300}>Light</option>
+                <option value={400}>Normal</option>
+                <option value={500}>Medium</option>
+                <option value={600}>Semi Bold</option>
+                <option value={700}>Bold</option>
+              </Select>
+            </div>
+            <div>
+              <Input
+                type="number"
+                label="Line Height"
+                value={localSettings.lineHeight}
+                onChange={(e) => handleChange('lineHeight', parseFloat(e.target.value))}
+                min={1}
+                max={3}
+                step={0.1}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Border Styling */}
+        <div>
+          <h4 className="text-md font-medium text-gray-700 mb-3">Borders</h4>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Select
+                label="Border Style"
+                value={localSettings.borderStyle}
+                onChange={(e) => handleChange('borderStyle', e.target.value)}
+              >
+                <option value="none">None</option>
+                <option value="solid">Solid</option>
+                <option value="dashed">Dashed</option>
+                <option value="dotted">Dotted</option>
+              </Select>
+            </div>
+            <div>
+              <Input
+                type="number"
+                label="Border Width (px)"
+                value={localSettings.borderWidth}
+                onChange={(e) => handleChange('borderWidth', parseInt(e.target.value))}
+                min={0}
+                max={10}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Spacing Controls */}
+        <div>
+          <h4 className="text-md font-medium text-gray-700 mb-3">Spacing</h4>
+          <div className="grid grid-cols-4 gap-2">
+            <div>
+              <Input
+                type="number"
+                label="Padding Top"
+                value={localSettings.paddingTop}
+                onChange={(e) => handleChange('paddingTop', parseInt(e.target.value))}
+                min={0}
+                max={48}
+              />
+            </div>
+            <div>
+              <Input
+                type="number"
+                label="Padding Right"
+                value={localSettings.paddingRight}
+                onChange={(e) => handleChange('paddingRight', parseInt(e.target.value))}
+                min={0}
+                max={48}
+              />
+            </div>
+            <div>
+              <Input
+                type="number"
+                label="Padding Bottom"
+                value={localSettings.paddingBottom}
+                onChange={(e) => handleChange('paddingBottom', parseInt(e.target.value))}
+                min={0}
+                max={48}
+              />
+            </div>
+            <div>
+              <Input
+                type="number"
+                label="Padding Left"
+                value={localSettings.paddingLeft}
+                onChange={(e) => handleChange('paddingLeft', parseInt(e.target.value))}
+                min={0}
+                max={48}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Background Effects */}
+        <div>
+          <h4 className="text-md font-medium text-gray-700 mb-3">Background</h4>
+          <div className="flex items-center justify-between mb-3">
+            <label className="text-sm font-medium text-gray-700">
+              Use Gradient Background
+            </label>
+            <button
+              onClick={() => handleChange('backgroundGradient', !localSettings.backgroundGradient)}
+              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                localSettings.backgroundGradient ? 'bg-primary-500' : 'bg-gray-200'
+              }`}
+            >
+              <span
+                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                  localSettings.backgroundGradient ? 'translate-x-6' : 'translate-x-1'
+                }`}
+              />
+            </button>
+          </div>
+          
+          {localSettings.backgroundGradient && (
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <Input
+                  type="color"
+                  label="Gradient From"
+                  value={localSettings.gradientFrom}
+                  onChange={(e) => handleChange('gradientFrom', e.target.value)}
+                />
+              </div>
+              <div>
+                <Input
+                  type="color"
+                  label="Gradient To"
+                  value={localSettings.gradientTo}
+                  onChange={(e) => handleChange('gradientTo', e.target.value)}
+                />
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Toggle Options */}
@@ -178,7 +379,24 @@ const WidgetCustomizer = ({ onSettingsChange, settings = {} }) => {
                 minRating: 1,
                 showBusinessInfo: true,
                 showDates: true,
-                accentColor: '#1a73e8'
+                accentColor: '#1a73e8',
+                borderStyle: 'solid',
+                borderWidth: 1,
+                paddingTop: 16,
+                paddingRight: 16,
+                paddingBottom: 16,
+                paddingLeft: 16,
+                marginTop: 0,
+                marginRight: 0,
+                marginBottom: 0,
+                marginLeft: 0,
+                fontFamily: 'Inter',
+                fontSize: 14,
+                fontWeight: 400,
+                lineHeight: 1.5,
+                backgroundGradient: false,
+                gradientFrom: '#ffffff',
+                gradientTo: '#f8fafc'
               }
               setLocalSettings(defaultSettings)
               onSettingsChange(defaultSettings)

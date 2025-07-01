@@ -11,6 +11,10 @@
   },
 "dependencies": {
     "@reduxjs/toolkit": "^2.7.0",
+    "@fontsource/inter": "^5.0.16",
+    "@fontsource/roboto": "^5.0.8",
+    "@fontsource/open-sans": "^5.0.19",
+    "@fontsource/lato": "^5.0.18",
     "apexcharts": "^4.7.0",
     "axios": "^1.6.7",
     "date-fns": "^4.1.0",
@@ -19,6 +23,7 @@
     "react": "^18.2.0",
     "react-apexcharts": "^1.7.0",
     "react-color": "^2.19.3",
+    "react-color-palette": "^7.2.2",
     "react-dom": "^18.2.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^6.15.0",
