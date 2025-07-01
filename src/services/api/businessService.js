@@ -180,18 +180,32 @@ throw error;
     }
   },
 
-  async searchByUrl(googleMapsUrl) {
+async searchByUrl(googleMapsUrl) {
     try {
-      // Extract place ID from Google Maps URL
-      const placeIdMatch = googleMapsUrl.match(/place\/([^\/]+)/) || 
-                          googleMapsUrl.match(/maps\/place\/([^\/]+)/) ||
-                          googleMapsUrl.match(/data=.*!3m1!4b1!4m\d+!3m\d+!1s([^!]+)/);
+      // Extract place ID from Google Maps URL - support multiple formats
+      const placeIdMatch = 
+        // Standard place URLs: /place/[place_id] or /maps/place/[place_id]
+        googleMapsUrl.match(/\/place\/([^\/\?&@]+)/) || 
+        googleMapsUrl.match(/\/maps\/place\/([^\/\?&@]+)/) ||
+        // Query parameter: ?q=place_id:[place_id]
+        googleMapsUrl.match(/[?&]q=place_id:([^&]+)/) ||
+        // CID parameter: ?cid=[place_id]
+        googleMapsUrl.match(/[?&]cid=([^&]+)/) ||
+        // Data parameter with place ID
+        googleMapsUrl.match(/data=.*!3m1!4b1!4m\d+!3m\d+!1s([^!]+)/) ||
+        // Alternative data parameter formats
+        googleMapsUrl.match(/data=.*!1s([^!]+)/) ||
+        // Place name with coordinates (extract from @ symbol)
+        googleMapsUrl.match(/\/place\/[^@]+@[^,]+,[^,]+,\d+z\/data=.*!1s([^!]+)/) ||
+        // Fallback for encoded place IDs
+        googleMapsUrl.match(/place_id[=:]([^&\s]+)/);
       
       if (!placeIdMatch) {
-        throw new Error('Invalid Google Maps URL');
+        throw new Error('Invalid Google Maps URL. Supported formats: maps.google.com/maps/place/[place_id], maps.google.com/maps?q=place_id:[place_id], or maps.google.com/maps?cid=[place_id]');
       }
 
-      const placeId = placeIdMatch[1];
+      // Decode the place ID in case it's URL encoded
+      const placeId = decodeURIComponent(placeIdMatch[1]);
 
       // Check if business exists in database
       const { ApperClient } = window.ApperSDK;
