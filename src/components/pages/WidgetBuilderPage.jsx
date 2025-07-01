@@ -40,22 +40,30 @@ const WidgetBuilderPage = () => {
     generateEmbedCode()
   }, [business, settings])
 
-  const loadData = async () => {
+const loadData = async () => {
     try {
       setLoading(true)
       setError(null)
 
-      const businessData = await businessService.getById(parseInt(businessId))
-      if (!businessData) {
-        throw new Error('Business not found')
+      // Validate businessId parameter
+      if (!businessId || isNaN(parseInt(businessId))) {
+        throw new Error('Invalid business ID provided. Please check the URL and try again.')
       }
 
+      // Fetch business data
+      const businessData = await businessService.getById(parseInt(businessId))
+      if (!businessData) {
+        throw new Error(`Business with ID ${businessId} not found. The business may have been deleted or the ID is incorrect.`)
+      }
+
+      // Fetch reviews data
       const reviewsData = await reviewService.getByBusinessId(parseInt(businessId))
       
       setBusiness(businessData)
-      setReviews(reviewsData)
+      setReviews(reviewsData || [])
     } catch (err) {
-      setError(err.message)
+      console.error('Error loading widget builder data:', err)
+      setError(err.message || 'Failed to load business data. Please try again.')
     } finally {
       setLoading(false)
     }

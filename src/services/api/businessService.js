@@ -34,8 +34,14 @@ const businessService = {
     }
   },
 
-  async getById(id) {
+async getById(id) {
     try {
+      // Validate ID parameter
+      if (!id || isNaN(parseInt(id))) {
+        console.error(`Invalid business ID provided: ${id}`);
+        return null;
+      }
+
       const { ApperClient } = window.ApperSDK;
       const apperClient = new ApperClient({
         apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
@@ -49,20 +55,33 @@ const businessService = {
           { field: { Name: "address" } },
           { field: { Name: "rating" } },
           { field: { Name: "total_reviews" } },
-          { field: { Name: "last_fetched" } }
+          { field: { Name: "last_fetched" } },
+          { field: { Name: "googlePlacesApiKey" } }
         ]
       };
 
-      const response = await apperClient.getRecordById('business', id, params);
+      const response = await apperClient.getRecordById('business', parseInt(id), params);
       
-      if (!response.success) {
-        console.error(response.message);
+      // Handle case where record doesn't exist
+      if (!response || !response.success) {
+        if (response && response.message) {
+          console.error(`Business not found (ID: ${id}):`, response.message);
+        } else {
+          console.error(`Business not found with ID: ${id}`);
+        }
+        return null;
+      }
+
+      // Handle case where data is empty or null
+      if (!response.data) {
+        console.error(`No data returned for business ID: ${id}`);
         return null;
       }
 
       return response.data;
     } catch (error) {
-      console.error(`Error fetching business with ID ${id}:`, error);
+      // Handle any exceptions thrown by ApperClient or network issues
+      console.error(`Error fetching business with ID ${id}:`, error.message || error);
       return null;
     }
   },
