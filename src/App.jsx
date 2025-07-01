@@ -9,6 +9,7 @@ import SearchPage from '@/components/pages/SearchPage';
 import WidgetBuilderPage from '@/components/pages/WidgetBuilderPage';
 import DashboardPage from '@/components/pages/DashboardPage';
 import SettingsPage from '@/components/pages/SettingsPage';
+import TestimonialsPage from '@/components/pages/TestimonialsPage';
 import Login from '@/components/pages/Login';
 import Signup from '@/components/pages/Signup';
 import Callback from '@/components/pages/Callback';
@@ -163,9 +164,14 @@ function AppContent() {
               <DashboardPage />
             </Layout>
           } />
-          <Route path="/settings" element={
+<Route path="/settings" element={
             <Layout>
               <SettingsPage />
+            </Layout>
+          } />
+          <Route path="/testimonials" element={
+            <Layout>
+              <TestimonialsPage />
             </Layout>
           } />
         </Routes>
