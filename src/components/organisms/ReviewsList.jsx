@@ -8,9 +8,9 @@ const ReviewsList = ({ reviews, business }) => {
   if (!reviews || reviews.length === 0) {
     return (
       <Empty
-        type="reviews"
-        onAction={() => window.location.reload()}
-        actionLabel="Refresh Reviews"
+        type="testimonials"
+        onAction={() => window.location.href = '/testimonials'}
+        actionLabel="Add Testimonials"
       />
     )
   }
@@ -23,12 +23,12 @@ const ReviewsList = ({ reviews, business }) => {
     >
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <ApperIcon name="MessageCircle" size={24} className="text-primary-600" />
+<ApperIcon name="MessageCircle" size={24} className="text-primary-600" />
           <h2 className="text-2xl font-bold text-gray-900">
-            Customer Reviews
+            Customer Testimonials
           </h2>
           <span className="bg-primary-100 text-primary-800 px-3 py-1 rounded-full text-sm font-medium">
-            {reviews.length} reviews
+            {reviews.length} testimonials
           </span>
         </div>
       </div>
@@ -44,9 +44,9 @@ key={review.Id}
       </div>
 
       {reviews.length > 0 && (
-        <div className="text-center pt-8">
+<div className="text-center pt-8">
           <p className="text-gray-500 text-sm">
-            Showing {reviews.length} most recent reviews from Google
+            Showing {reviews.length} most recent testimonials
           </p>
         </div>
       )}

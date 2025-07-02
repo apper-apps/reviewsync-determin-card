@@ -5,7 +5,6 @@ import { ToastContainer } from 'react-toastify';
 import { store } from '@/store/store';
 import { setUser, clearUser } from '@/store/userSlice';
 import Layout from '@/components/organisms/Layout';
-import SearchPage from '@/components/pages/SearchPage';
 import WidgetBuilderPage from '@/components/pages/WidgetBuilderPage';
 import DashboardPage from '@/components/pages/DashboardPage';
 import SettingsPage from '@/components/pages/SettingsPage';
@@ -144,14 +143,14 @@ function AppContent() {
           <Route path="/error" element={<ErrorPage />} />
           <Route path="/prompt-password/:appId/:emailAddress/:provider" element={<PromptPassword />} />
           <Route path="/reset-password/:appId/:fields" element={<ResetPassword />} />
-          <Route path="/" element={
+<Route path="/" element={
             <Layout>
-              <SearchPage />
+              <DashboardPage />
             </Layout>
           } />
           <Route path="/search" element={
             <Layout>
-              <SearchPage />
+              <DashboardPage />
             </Layout>
           } />
           <Route path="/widget/:businessId" element={

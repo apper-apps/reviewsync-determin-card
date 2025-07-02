@@ -39,17 +39,16 @@ const DashboardPage = () => {
 
       setBusinesses(businessesData)
       setWidgets(widgetsData)
-
-      // Calculate stats
-const totalReviews = businessesData.reduce((sum, business) => sum + (business.total_reviews || 0), 0)
+// Calculate stats - using custom testimonials instead of Google reviews
+      const totalTestimonials = 0; // Will be calculated from testimonials service
       const averageRating = businessesData.length > 0 
-        ? businessesData.reduce((sum, business) => sum + business.rating, 0) / businessesData.length
+        ? businessesData.reduce((sum, business) => sum + (business.rating || 0), 0) / businessesData.length
         : 0
 
-      setStats({
+setStats({
         totalBusinesses: businessesData.length,
         totalWidgets: widgetsData.length,
-        totalReviews,
+        totalTestimonials,
         averageRating: parseFloat(averageRating.toFixed(1))
       })
     } catch (err) {
@@ -124,9 +123,9 @@ setWidgets(widgets.filter(w => w.Id !== widgetId))
             gradient: 'from-success-500 to-success-600',
             bgGradient: 'from-success-50 to-success-100'
           },
-          {
-            title: 'Total Reviews',
-            value: stats.totalReviews,
+{
+            title: 'Total Testimonials',
+            value: stats.totalTestimonials,
             icon: 'MessageCircle',
             gradient: 'from-warning-500 to-warning-600',
             bgGradient: 'from-warning-50 to-warning-100'

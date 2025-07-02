@@ -118,42 +118,6 @@ const reviewService = {
     }
   },
 
-  async refresh(businessId) {
-    try {
-      // Simulate creating new reviews
-      const authors = ['Alex Smith', 'Jamie Taylor', 'Morgan Lee', 'Casey Jordan', 'Riley Parker'];
-      const sampleTexts = [
-        'Great experience! Highly recommend.',
-        'Excellent service and quality.',
-        'Professional and reliable.',
-        'Very satisfied with the results.',
-        'Outstanding customer service!'
-      ];
-      
-      const numNewReviews = Math.floor(Math.random() * 3);
-      const newReviews = [];
-      
-      for (let i = 0; i < numNewReviews; i++) {
-        const newReview = {
-          business_id: businessId,
-          author_name: authors[Math.floor(Math.random() * authors.length)],
-          rating: Math.floor(Math.random() * 2) + 4, // 4 or 5 stars
-          text: sampleTexts[Math.floor(Math.random() * sampleTexts.length)],
-          published_at: new Date().toISOString(),
-          author_photo_url: null
-        };
-        
-        const created = await this.create(newReview);
-        if (created) newReviews.push(created);
-      }
-      
-      // Return all reviews for the business including new ones
-      return await this.getByBusinessId(businessId);
-    } catch (error) {
-      console.error("Error refreshing reviews:", error);
-      throw error;
-    }
-  },
 
   async create(reviewData) {
     try {
